@@ -1,0 +1,21 @@
+// bot.command('test', (ctx) => {
+//     if (users.includes(ctx.message.from.username) == false || IDs.includes(ctx.message.from.id) == false) {
+//         users.push(ctx.message.from.username)
+//         IDs.push(ctx.message.from.id)
+//     }
+//     console.log(users)
+//     console.log(IDs)
+// })
+
+// bot.command('bye', (ctx) => {
+//     if (users.includes(ctx.message.from.username) || IDs.includes(ctx.message.from.id)) {
+//         users.splice(users.indexOf(ctx.message.from.username,1))
+//         IDs.splice(IDs.indexOf(ctx.message.from.id),1)
+//     } else {
+//         print("Wait how..")
+//     }
+//     console.log(users)
+//     console.log(IDs)
+// })
+
+// users.forEach(element => ctx.reply("Ring ring! " + ctx.message.from.username + " esta llamando a todos!\n" + "@" + element))
