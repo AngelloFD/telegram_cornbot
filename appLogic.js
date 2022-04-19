@@ -1,5 +1,7 @@
+require('dotenv').config();
+
 const { Telegraf } = require('telegraf')
-const bot = new Telegraf('1759842853:AAF62w2jEicdxKe-imqAnWAuE8s72WA2CEw')
+const bot = new Telegraf(process.env.BOT_TOKEN)
 
 /* Comando /everyone 
 Solo los admins
