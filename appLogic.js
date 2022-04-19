@@ -3,48 +3,16 @@ require('dotenv').config();
 const { Telegraf } = require('telegraf')
 const bot = new Telegraf(process.env.BOT_TOKEN)
 
-/* Comando /everyone 
-Solo los admins
-No considerar bots 
-Hallar una forma de guardar los usuarios previamente ya registrados para el /everyone
-*/
-
 IDs = []
 users = []
 
 bot.command(['everyone', 'Everyone', 'EVERYONE'], (ctx) => {
-    console.log(ctx.message)
-    if (!(ctx.chat.type == 'private') && (IDs.length > 0) && (users.length > 0)) {
+    console.log("Test")
+    if (!(ctx.chat.type == 'private') && (IDs.length > 0) && (users.length > 0)){
         msg = "Ring ring! " + ctx.message.from.username + " esta llamando a todos!\n"
         users.forEach(element => msg += "@" + element + " ")
         ctx.reply(msg)
-        // userMSG = ctx.message.text
-        // userMSGaray = userMSG.split(' ')
-        /*if (userMSGaray[0].includes('/everyone') || userMSGaray[0].includes('/Everyone') || userMSGaray[0].includes('/EVERYONE')) {
-            everyoneo.add(ctx.chat.id)
-            setTimeout(() => {
-                everyoneo.delete(ctx.chat.id)
-            }, 86400000)
-        }*/
-    } else {
-        ctx.reply("No hay nadie registrado / Funcion solo para grupos")
     }
-})
-
-/* To catch "almost" every username in the server | Must find a more efficient way.. | Yes, it detects bots bcuz lul */
-bot.on('text', (ctx) => {
-    if (ctx.message.reply_to_message) {
-        if (users.includes(ctx.message.reply_to_message.from.username) == false && IDs.includes(ctx.message.reply_to_message.from.id) == false) {
-            users.push(ctx.message.reply_to_message.from.username)
-            IDs.push(ctx.message.reply_to_message.from.id)
-        }
-    } else {
-        if (!(users.includes(ctx.message.from.username)) && !(IDs.includes(ctx.message.from.id))) {
-            users.push(ctx.message.from.username)
-            IDs.push(ctx.message.from.id)
-        }
-    }
-    console.log(users)
 })
 
 bot.command(['pinga', 'Pinga', 'PINGA'], (ctx) => {
@@ -53,7 +21,22 @@ bot.command(['pinga', 'Pinga', 'PINGA'], (ctx) => {
     adUser = msgArray.join(' ')
 
     ctx.reply(adUser + ' ¡' + ctx.from.first_name + ' requiere un pingaso con caracter de urgencia!')
+    new Promise(r => setTimeout(r, 2000))
     ctx.replyWithSticker('CAACAgEAAxkBAAIBZV_VptCTvUPTslR149fZ6rHZbLYIAAIfAAOd_dIVKoOiQA9vuYseBA')
 })
+
+/* Saving IDs and usernames */
+bot.on('new_chat_members', (ctx) => {
+    IDs.push(ctx.message.new_chat_member.id)
+    users.push(ctx.message.new_chat_member.username)
+})
+
+bot.on('text', (ctx) => {
+    if (!(users.includes(ctx.message.from.username)) && !(IDs.includes(ctx.message.from.id)) && ctx.message.from.is_bot == false) {
+        users.push(ctx.message.from.username)
+        IDs.push(ctx.message.from.id)
+    }
+})
+/* */
 
 bot.launch()
