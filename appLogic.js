@@ -2,17 +2,20 @@ require('dotenv').config();
 
 const { Telegraf } = require('telegraf')
 const bot = new Telegraf(process.env.BOT_TOKEN)
+const fs = require('fs')
 
-IDs = []
-users = []
-
-bot.command(['everyone', 'Everyone', 'EVERYONE'], (ctx) => {
-    console.log("Test")
-    if (!(ctx.chat.type == 'private') && (IDs.length > 0) && (users.length > 0)){
-        msg = "Ring ring! " + ctx.message.from.username + " esta llamando a todos!\n"
-        users.forEach(element => msg += "@" + element + " ")
-        ctx.reply(msg)
-    }
+// everyone command that reads the usernames from users.txt and sends a message with the usernames after an @ with nothing more
+bot.command('everyone', (ctx) => {
+    // while not on cooldown, execute the command
+    fs.readFile('users.txt', 'utf8', (err, data) => {
+        if (err) throw err;
+        let users = data.split(' ')
+        let message = 'Ring ring! ' + ctx.message.from.username + ' esta llamando a todos!\n'
+        for (let i = 0; i < users.length; i++) {
+            message += '@' + users[i] + ' '
+        }
+        ctx.reply(message)
+    })
 })
 
 bot.command(['pinga', 'Pinga', 'PINGA'], (ctx) => {
@@ -25,17 +28,23 @@ bot.command(['pinga', 'Pinga', 'PINGA'], (ctx) => {
     ctx.replyWithSticker('CAACAgEAAxkBAAIBZV_VptCTvUPTslR149fZ6rHZbLYIAAIfAAOd_dIVKoOiQA9vuYseBA')
 })
 
-/* Saving IDs and usernames */
+// Save the ID of all the users in the chat in data.txt
 bot.on('new_chat_members', (ctx) => {
-    IDs.push(ctx.message.new_chat_member.id)
-    users.push(ctx.message.new_chat_member.username)
+    fs.writeFileSync('data.txt', JSON.stringify(IDs))
+    fs.writeFileSync('users.txt', JSON.stringify(users))
 })
 
 bot.on('text', (ctx) => {
-    if (!(users.includes(ctx.message.from.username)) && !(IDs.includes(ctx.message.from.id)) && ctx.message.from.is_bot == false) {
-        users.push(ctx.message.from.username)
-        IDs.push(ctx.message.from.id)
-    }
+    // read the users.txt file and check if the user that sent the message is in the file.
+    fs.readFile('users.txt', 'utf8', (err, data) => {
+        if (err) throw err;
+        let users = data.split(' ')
+        let user = ctx.message.from.username
+        if (!(users.includes(user))) {
+            // if the user is not in the file, add it to the file
+            fs.appendFileSync('users.txt', ' ' + user)
+        }
+    })
 })
 /* */
 
