@@ -101,6 +101,16 @@ bot.command('everyone', (ctx) => {
             })
             fs.appendFileSync('cooldowns.txt', ctx.from.id + '\n')
         }
+    // while not on cooldown, execute the command
+    fs.readFile('users.txt', 'utf8', (err, data) => {
+        if (err) throw err;
+        let users = data.split(' ')
+        let message = 'Ring ring! ' + ctx.message.from.username + ' esta llamando a todos!\n'
+        for (let i = 0; i < users.length; i++) {
+            message += '@' + users[i] + ' '
+        }
+        ctx.reply(message)
+    })
     }
 
     // After 1 minute, remove the id of the user from the cooldowns.txt file
