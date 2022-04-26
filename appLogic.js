@@ -8,6 +8,9 @@ const fs = require('fs')
 bot.command('everyone', (ctx) => {
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> parent of e160bae (Individual /everyone cooldown)
     // while not on cooldown, execute the command
     fs.readFile('users.txt', 'utf8', (err, data) => {
         if (err) throw err;
@@ -18,6 +21,7 @@ bot.command('everyone', (ctx) => {
         }
         ctx.reply(message)
     })
+<<<<<<< HEAD
 =======
 =======
 >>>>>>> parent of f1c0b95 (Deployment)
@@ -58,6 +62,8 @@ bot.command('everyone', (ctx) => {
 >>>>>>> parent of f1c0b95 (Deployment)
 =======
 >>>>>>> parent of f1c0b95 (Deployment)
+=======
+>>>>>>> parent of e160bae (Individual /everyone cooldown)
 })
 
 bot.command(['pinga', 'Pinga', 'PINGA'], (ctx) => {
@@ -74,6 +80,7 @@ bot.command(['pinga', 'Pinga', 'PINGA'], (ctx) => {
 bot.on('new_chat_members', (ctx) => {
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
     fs.writeFileSync('data.txt', JSON.stringify(IDs))
     fs.writeFileSync('users.txt', JSON.stringify(users))
 =======
@@ -82,6 +89,10 @@ bot.on('new_chat_members', (ctx) => {
 =======
     fs.appendFileSync('users.txt', '' + user)
 >>>>>>> parent of f1c0b95 (Deployment)
+=======
+    fs.writeFileSync('data.txt', JSON.stringify(IDs))
+    fs.writeFileSync('users.txt', JSON.stringify(users))
+>>>>>>> parent of e160bae (Individual /everyone cooldown)
 })
 
 bot.on('text', (ctx) => {
@@ -94,6 +105,7 @@ bot.on('text', (ctx) => {
             // if the user is not in the file, add it to the file
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
             fs.appendFileSync('users.txt', ' ' + user)
 =======
             fs.appendFileSync('users.txt', '' + user)
@@ -101,6 +113,9 @@ bot.on('text', (ctx) => {
 =======
             fs.appendFileSync('users.txt', '' + user)
 >>>>>>> parent of f1c0b95 (Deployment)
+=======
+            fs.appendFileSync('users.txt', ' ' + user)
+>>>>>>> parent of e160bae (Individual /everyone cooldown)
         }
     })
 })
