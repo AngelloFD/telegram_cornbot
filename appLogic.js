@@ -6,6 +6,18 @@ const fs = require('fs')
 
 // everyone command that reads the usernames from users.txt and sends a message with the usernames after an @ with nothing more
 bot.command('everyone', (ctx) => {
+<<<<<<< HEAD
+    // while not on cooldown, execute the command
+    fs.readFile('users.txt', 'utf8', (err, data) => {
+        if (err) throw err;
+        let users = data.split(' ')
+        let message = 'Ring ring! ' + ctx.message.from.username + ' esta llamando a todos!\n'
+        for (let i = 0; i < users.length; i++) {
+            message += '@' + users[i] + ' '
+        }
+        ctx.reply(message)
+    })
+=======
     // Add the id of the user that sent the command to the cooldowns.txt file and then check if the user is on cooldown
     if (fs.readFileSync('cooldowns.txt').toString().includes(ctx.from.id)) {
         console.log("User is on cooldown")
@@ -39,6 +51,7 @@ bot.command('everyone', (ctx) => {
         })
     }, 60000)
 
+>>>>>>> parent of f1c0b95 (Deployment)
 })
 
 bot.command(['pinga', 'Pinga', 'PINGA'], (ctx) => {
@@ -53,7 +66,12 @@ bot.command(['pinga', 'Pinga', 'PINGA'], (ctx) => {
 
 // Save the ID of all the users in the chat in data.txt
 bot.on('new_chat_members', (ctx) => {
+<<<<<<< HEAD
+    fs.writeFileSync('data.txt', JSON.stringify(IDs))
+    fs.writeFileSync('users.txt', JSON.stringify(users))
+=======
     fs.appendFileSync('users.txt', '' + user)
+>>>>>>> parent of f1c0b95 (Deployment)
 })
 
 bot.on('text', (ctx) => {
@@ -64,7 +82,11 @@ bot.on('text', (ctx) => {
         let user = ctx.message.from.username
         if (!(users.includes(user))) {
             // if the user is not in the file, add it to the file
+<<<<<<< HEAD
+            fs.appendFileSync('users.txt', ' ' + user)
+=======
             fs.appendFileSync('users.txt', '' + user)
+>>>>>>> parent of f1c0b95 (Deployment)
         }
     })
 })
