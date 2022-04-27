@@ -4,10 +4,6 @@ const { Telegraf } = require('telegraf')
 const bot = new Telegraf(process.env.BOT_TOKEN)
 const fs = require('fs')
 
-/* TODO: Usernames pueden cambiar y se estarían grabando 2 usuarios de la misma persona 
-
-*/
-
 // Comando help para mostrar los comandos disponibles en una inline keyboard
 bot.command('help', (ctx) => {
     bot.telegram.sendMessage(ctx.chat.id, 'Comandos disponibles:', {
