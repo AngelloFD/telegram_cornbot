@@ -8,7 +8,7 @@ const fs = require('fs')
 
 // Comando help para mostrar los comandos disponibles en una inline keyboard
 bot.command('help', (ctx) => {
-    bot.telegram.sendMessage(ctx.chat.id, 'Comandos disponibles:', {
+    ctx.reply('Comandos disponibles:', {
         reply_markup: {
             inline_keyboard: [
                 [{ text: '/help', callback_data: 'callHelp' }, { text: '/pinga', callback_data: 'callPinga' }],
@@ -20,7 +20,7 @@ bot.command('help', (ctx) => {
 
 bot.action('callBack', (ctx) => {
     ctx.deleteMessage()
-    bot.telegram.sendMessage(ctx.chat.id, 'Comandos disponibles:', {
+    ctx.reply('Comandos disponibles:', {
         reply_markup: {
             inline_keyboard: [
                 [{ text: '/help', callback_data: 'callHelp' }, { text: '/pinga', callback_data: 'callPinga' }],
