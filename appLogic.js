@@ -1,7 +1,9 @@
 require('dotenv').config();
 
-const { Telegraf } = require('telegraf')
-const bot = new Telegraf(process.env.BOT_TOKEN)
+// const { Telegraf } = require('telegraf')
+// const bot = new Telegraf(process.env.BOT_TOKEN)
+const { Composer } = require('micro-bot')
+const bot = new Composer()
 const fs = require('fs')
 
 // Comando help para mostrar los comandos disponibles en una inline keyboard
@@ -161,4 +163,5 @@ bot.on('text', (ctx) => {
 })
 /* */
 
-bot.launch()
+// bot.launch()
+module.exports = bot
