@@ -1,12 +1,14 @@
 require('dotenv').config();
 
-const { Telegraf } = require('telegraf')
-const bot = new Telegraf(process.env.BOT_TOKEN)
+// const { Telegraf } = require('telegraf')
+// const bot = new Telegraf(process.env.BOT_TOKEN)
+const { Composer } = require('micro-bot')
+const bot = new Composer()
 const fs = require('fs')
 
 // Comando help para mostrar los comandos disponibles en una inline keyboard
 bot.command('help', (ctx) => {
-    bot.telegram.sendMessage(ctx.chat.id, 'Comandos disponibles:', {
+    ctx.reply('Comandos disponibles:', {
         reply_markup: {
             inline_keyboard: [
                 [{ text: '/help', callback_data: 'callHelp' }, { text: '/pinga', callback_data: 'callPinga' }],
@@ -18,7 +20,7 @@ bot.command('help', (ctx) => {
 
 bot.action('callBack', (ctx) => {
     ctx.deleteMessage()
-    bot.telegram.sendMessage(ctx.chat.id, 'Comandos disponibles:', {
+    ctx.reply('Comandos disponibles:', {
         reply_markup: {
             inline_keyboard: [
                 [{ text: '/help', callback_data: 'callHelp' }, { text: '/pinga', callback_data: 'callPinga' }],
@@ -161,4 +163,5 @@ bot.on('text', (ctx) => {
 })
 /* */
 
-bot.launch()
+// bot.launch()
+module.exports = bot
