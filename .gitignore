@@ -1,4 +1,4 @@
 node_modules
-*.txt
+fromHere.txt
 .env
 package-lock.json
