@@ -6,13 +6,7 @@ const { Composer } = require('micro-bot')
 const bot = new Composer()
 const fs = require('fs')
 
-function is_on_cooldown() {
-    cooldown = false
-    setTimeout(() => {
-        cooldown = true
-    }, 60000)
-    return cooldown
-}
+onCooldown = false
 
 bot.command('help', (ctx) => {
     ctx.reply('Comandos disponibles:', {
@@ -85,8 +79,8 @@ bot.action('callPinga', (ctx) => {
 bot.command('everyone', (ctx) => {
     if (ctx.chat.type == 'private') {
         ctx.reply('Este comando solo está disponible en grupos')
-    } else if (is_on_cooldown()) {
-        console.log('on cooldown')
+    } else if (onCooldown) {
+        console.log("On cooldown")
     } else {
         if (fs.readFileSync('users.txt').toString() == "") {
             console.log("users.txt is empty")
@@ -100,6 +94,11 @@ bot.command('everyone', (ctx) => {
                 }
                 ctx.reply(message)
             })
+
+            setTimeout(() => {
+                console.log("Now on timeout")
+                onCooldown = true
+            }, 60000)
         }
     }
 })
