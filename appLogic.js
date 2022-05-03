@@ -8,8 +8,7 @@ const fs = require('fs')
 
 // function for cooldown for a command
 function is_on_cooldown(time) {
-    const now = Date.now()
-    if (now - time > 60000) {
+    if (time < Date.now()) {
         return false
     } else {
         return true
@@ -89,7 +88,7 @@ bot.command('everyone', (ctx) => {
     if (ctx.message.chat.type === 'private') {
         ctx.reply('Este comando solo puede ser usado en grupos')
         // else if its on cooldown 
-    } else if (is_on_cooldown(ctx.session.time)) {
+    } else if (is_on_cooldown(60 * 1000)) {
         ctx.reply('Este comando está en cooldown')
 
         // If the users.txt file is empty, do nothing
