@@ -6,6 +6,16 @@ const { Composer } = require('micro-bot')
 const bot = new Composer()
 const fs = require('fs')
 
+// function for cooldown for a command
+function is_on_cooldown(time) {
+    const now = Date.now()
+    if (now - time > 60000) {
+        return false
+    } else {
+        return true
+    }
+}
+
 // Comando help para mostrar los comandos disponibles en una inline keyboard
 bot.command('help', (ctx) => {
     ctx.reply('Comandos disponibles:', {
@@ -58,7 +68,7 @@ bot.action('callEveryone', (ctx) => {
         }
     })
 })
-    
+
 bot.action('callPinga', (ctx) => {
     ctx.deleteMessage()
     ctx.replyWithMarkdown(`
@@ -77,71 +87,42 @@ bot.action('callPinga', (ctx) => {
 
 // everyone command that reads the usernames from users.txt and sends a message with the usernames after an @ with nothing more
 bot.command('everyone', (ctx) => {
-    if (ctx.chat.type == 'private') {
-        ctx.reply('Este comando solo está disponible en grupos')
-    }
+    if (ctx.message.chat.type === 'private') {
+        ctx.reply('Este comando solo puede ser usado en grupos')
+        // else if its on cooldown 
+    } else if (is_on_cooldown(ctx.session.time)) {
+        ctx.reply('Este comando está en cooldown')
 
-    if (fs.readFileSync('cooldowns.txt').toString() != '') {
-        console.log("Command on cooldown")
-    } else {
         // If the users.txt file is empty, do nothing
-        if (fs.readFileSync('users.txt').toString() == "") {
-            console.log("users.txt is empty")
-        } else {
-            fs.readFile('users.txt', 'utf8', (err, data) => {
-                if (err) throw err;
-                let users = data.split(' ')
-                let message = 'Ring ring! ' + ctx.message.from.username + ' esta llamando a todos!\n'
-                for (let i = 0; i < users.length; i++) {
-                    message += '@' + users[i] + ' '
-                }
-                ctx.reply(message)
-            })
-            fs.appendFileSync('cooldowns.txt', ctx.from.id + '\n')
-        }
-    // while not on cooldown, execute the command
-    fs.readFile('users.txt', 'utf8', (err, data) => {
-        if (err) throw err;
-        let users = data.split(' ')
-        let message = 'Ring ring! ' + ctx.message.from.username + ' esta llamando a todos!\n'
-        for (let i = 0; i < users.length; i++) {
-            message += '@' + users[i] + ' '
-        }
-        ctx.reply(message)
-    })
-    }
-
-    // After 1 minute, remove the id of the user from the cooldowns.txt file
-    setTimeout(() => {
-        fs.readFile('cooldowns.txt', 'utf8', (err, data) => {
+    } else if (fs.readFileSync('users.txt').toString() == "") {
+        console.log("users.txt is empty")
+    } else {
+        fs.readFile('users.txt', 'utf8', (err, data) => {
             if (err) throw err;
-            let cooldowns = data.split(', ')
-            let newCooldowns = ''
-            for (let i = 0; i < cooldowns.length; i++) {
-                if (cooldowns[i] != ctx.from.id) {
-                    newCooldowns += cooldowns[i] + '\n'
-                }
+            let users = data.split(' ')
+            let message = 'Ring ring! ' + ctx.message.from.username + ' esta llamando a todos!\n'
+            for (let i = 0; i < users.length; i++) {
+                message += '@' + users[i] + ' '
             }
-            fs.writeFile('cooldowns.txt', newCooldowns, (err) => {
-                if (err) throw err;
-            })
+            ctx.reply(message)
         })
-    }, 60000)
-
+    }
 })
 
 bot.command(['pinga', 'Pinga', 'PINGA'], (ctx) => {
     if (ctx.chat.type == 'private') {
         ctx.reply('Este comando solo está disponible en grupos')
-    }
-    
-    msgArray = ctx.message.text.split(' ')
-    msgArray.shift()
-    adUser = msgArray.join(' ')
+    } else {
+        msgArray = ctx.message.text.split(' ')
+        msgArray.shift()
+        adUser = msgArray.join(' ')
 
-    ctx.reply(adUser + ' ¡' + ctx.from.first_name + ' requiere un pingaso con carácter de urgencia!')
-    new Promise(r => setTimeout(r, 2000))
-    ctx.replyWithSticker('CAACAgEAAxkBAAIBZV_VptCTvUPTslR149fZ6rHZbLYIAAIfAAOd_dIVKoOiQA9vuYseBA')
+        ctx.reply(adUser + ' ¡' + ctx.from.first_name + ' requiere un pingaso con carácter de urgencia!')
+        new Promise(r => setTimeout(r, 2000))
+        ctx.replyWithSticker('CAACAgEAAxkBAAIBZV_VptCTvUPTslR149fZ6rHZbLYIAAIfAAOd_dIVKoOiQA9vuYseBA')
+    }
+
+
 })
 
 // Save the ID of all the users in the chat in data.txt
@@ -150,16 +131,21 @@ bot.on('new_chat_members', (ctx) => {
 })
 
 bot.on('text', (ctx) => {
-    // read the users.txt file and check if the user that sent the message is in the file.
-    fs.readFile('users.txt', 'utf8', (err, data) => {
-        if (err) throw err;
-        let users = data.split(' ')
-        let user = ctx.message.from.username
-        if (!(users.includes(user))) {
-            // if the user is not in the file, add it to the file
-            fs.appendFileSync('users.txt', '' + user)
-        }
-    })
+    if (ctx.chat.type == 'private') {
+        ctx.reply('Este comando solo está disponible en grupos')
+    } else {
+        // read the users.txt file and check if the user that sent the message is in the file.
+        fs.readFile('users.txt', 'utf8', (err, data) => {
+            if (err) throw err;
+            let users = data.split(' ')
+            let user = ctx.message.from.username
+            if (!(users.includes(user))) {
+                // if the user is not in the file, add it to the file
+                fs.appendFileSync('users.txt', '' + user)
+            }
+        })
+    }
+
 })
 /* */
 
