@@ -85,7 +85,6 @@ bot.action('callPinga', (ctx) => {
     })
 })
 
-// everyone command that reads the usernames from users.txt and sends a message with the usernames after an @ with nothing more
 bot.command('everyone', (ctx) => {
     if (ctx.message.chat.type === 'private') {
         ctx.reply('Este comando solo puede ser usado en grupos')
@@ -125,7 +124,6 @@ bot.command(['pinga', 'Pinga', 'PINGA'], (ctx) => {
 
 })
 
-// Save the ID of all the users in the chat in data.txt
 bot.on('new_chat_members', (ctx) => {
     fs.appendFileSync('users.txt', '' + user)
 })
